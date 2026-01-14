@@ -62,16 +62,36 @@ void onStart(ServiceInstance service) async {
     });
   }
 
-  service.on('stopService').listen((event) {
-    service.stopSelf();
-  });
-
   // Initialize traffic monitoring
   await TrafficRepository.init();
   final trafficService = NetworkSpeedService();
   trafficService.init();
 
+  int _bufferedDl = 0;
+  int _bufferedUl = 0;
   DateTime? lastUpdate;
+  Timer? _flushTimer;
+
+  // Helper to flush data
+  Future<void> flushBufferedData() async {
+    if (_bufferedDl > 0 || _bufferedUl > 0) {
+      await TrafficRepository.updateToday(_bufferedDl, _bufferedUl);
+      _bufferedDl = 0;
+      _bufferedUl = 0;
+    }
+  }
+
+  // Periodic flush every 30 seconds
+  _flushTimer = Timer.periodic(const Duration(seconds: 30), (_) async {
+    await flushBufferedData();
+  });
+
+  service.on('stopService').listen((event) async {
+    _flushTimer?.cancel();
+    await flushBufferedData(); // Force final flush
+    trafficService.dispose();
+    service.stopSelf();
+  });
 
   trafficService.speedStream.listen((data) async {
     final now = DateTime.now();
@@ -84,7 +104,9 @@ void onStart(ServiceInstance service) async {
       final dlBytes = (data.downloadSpeed * 1024 * secondsElapsed).round();
       final ulBytes = (data.uploadSpeed * 1024 * secondsElapsed).round();
       
-      await TrafficRepository.updateToday(dlBytes, ulBytes);
+      // Buffer data instead of writing immediately
+      _bufferedDl += dlBytes;
+      _bufferedUl += ulBytes;
     }
     lastUpdate = now;
 
@@ -103,11 +125,6 @@ void onStart(ServiceInstance service) async {
         );
       }
     }
-  });
-
-  service.on('stopService').listen((event) {
-    trafficService.dispose();
-    service.stopSelf();
   });
 }
 

@@ -145,7 +145,12 @@ class _HomePageState extends State<HomePage> {
                               future: FlutterOverlayWindow.isActive(),
                               builder: (context, snapshot) {
                                 final isOverlayActive = snapshot.data ?? false;
-                                return TextButton(
+                                return ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 15),
+                                    backgroundColor: isOverlayActive ? Colors.orangeAccent : Colors.cyanAccent,
+                                    foregroundColor: Colors.black,
+                                  ),
                                   onPressed: () async {
                                     if (isOverlayActive) {
                                       await FlutterOverlayWindow.closeOverlay();
@@ -157,6 +162,9 @@ class _HomePageState extends State<HomePage> {
                                       if (granted) {
                                         await FlutterOverlayWindow.showOverlay(
                                           enableDrag: true,
+                                          height: 60,
+                                          width: 60,
+                                          alignment: OverlayAlignment.centerLeft,
                                           overlayTitle: "Speed Monitor",
                                           overlayContent: "Running...",
                                           flag: OverlayFlag.defaultFlag,
@@ -169,7 +177,7 @@ class _HomePageState extends State<HomePage> {
                                   },
                                   child: Text(
                                     isOverlayActive ? "Disable Overlay" : "Enable Overlay",
-                                    style: const TextStyle(color: Colors.white),
+                                    style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                                   ),
                                 );
                               },
