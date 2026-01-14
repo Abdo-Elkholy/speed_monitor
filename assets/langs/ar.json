@@ -1,0 +1,16 @@
+{
+    "title": "مراقب السرعة",
+    "service_status": "حالة الخدمة",
+    "monitoring_active": "المراقبة نشطة",
+    "monitoring_stopped": "المراقبة متوقفة",
+    "start_service": "بدء الخدمة",
+    "stop_service": "إيقاف الخدمة",
+    "unknown_device": "جهاز غير معروف",
+    "history": "السجل",
+    "today": "اليوم",
+    "previous_days": "الأيام السابقة",
+    "date": "التاريخ",
+    "download": "تنزيل",
+    "upload": "رفع",
+    "total": "الإجمالي"
+}

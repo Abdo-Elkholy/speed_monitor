@@ -1,0 +1,16 @@
+{
+    "title": "Speed Monitor",
+    "service_status": "Service Status",
+    "monitoring_active": "Monitoring Active",
+    "monitoring_stopped": "Monitoring Stopped",
+    "start_service": "START SERVICE",
+    "stop_service": "STOP SERVICE",
+    "unknown_device": "Unknown Device",
+    "history": "History",
+    "today": "Today",
+    "previous_days": "Previous Days",
+    "date": "Date",
+    "download": "Download",
+    "upload": "Upload",
+    "total": "Total"
+}
